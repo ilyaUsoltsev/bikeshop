@@ -74,16 +74,26 @@ export async function updateProduct(
   const data = result.data;
   const product = await db.product.findUnique({ where: { id } });
 
-  if (product == null) return notFound();
+  if (product == null) {
+    return notFound();
+  }
 
   let imagePath = product.imagePath;
+
   if (data.image != null && data.image.size > 0) {
-    await fs.unlink(`public${product.imagePath}`);
-    imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
-    await fs.writeFile(
-      `public${imagePath}`,
-      Buffer.from(await data.image.arrayBuffer())
-    );
+    await s3.deleteObject({
+      Bucket: 'badenbikeshop',
+      Key: product.imagePath.split('/').pop(),
+    });
+
+    await s3.putObject({
+      Bucket: 'badenbikeshop',
+      Key: data.image.name,
+      Body: Buffer.from(await data.image.arrayBuffer()),
+      ContentType: data.image.type,
+    });
+
+    imagePath = `https://badenbikeshop.s3.eu-north-1.amazonaws.com/${data.image.name}`;
   }
 
   await db.product.update({
