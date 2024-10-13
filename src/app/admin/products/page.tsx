@@ -23,6 +23,7 @@ import {
   DeleteDropdownItem,
 } from './_components/ProductActions';
 import { formatCurrencyCHF, formatNumber } from '@/lib/formatter';
+import Image from 'next/image';
 
 export default function AdminProductsPage() {
   return (
@@ -45,6 +46,7 @@ async function ProductsTable() {
       name: true,
       priceInCents: true,
       isAvailable: true,
+      imagePath: true,
       _count: { select: { Order: true } },
     },
     orderBy: { name: 'asc' },
@@ -60,6 +62,7 @@ async function ProductsTable() {
             <span className='sr-only'>Available For Purchase</span>
           </TableHead>
           <TableHead>Name</TableHead>
+          <TableHead>Image</TableHead>
           <TableHead>Price</TableHead>
           <TableHead>Orders</TableHead>
           <TableHead className='w-0'>
@@ -84,6 +87,14 @@ async function ProductsTable() {
               )}
             </TableCell>
             <TableCell>{product.name}</TableCell>
+            <TableCell>
+              <Image
+                src={product.imagePath}
+                alt={'Product Image'}
+                width={64}
+                height={64}
+              />
+            </TableCell>
             <TableCell>
               {formatCurrencyCHF(product.priceInCents / 100)}
             </TableCell>

@@ -5,6 +5,11 @@ import { z } from 'zod';
 import fs from 'fs/promises';
 import { notFound, redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { S3 } from '@aws-sdk/client-s3';
+
+const s3 = new S3({
+  region: 'eu-north-1',
+});
 
 const fileSchema = z.instanceof(File, { message: 'Required' });
 const imageSchema = fileSchema.refine(
@@ -15,7 +20,6 @@ const addSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
   priceInCents: z.coerce.number().int().min(1),
-  file: fileSchema.refine((file) => file.size > 0, 'Required'),
   image: imageSchema.refine((file) => file.size > 0, 'Required'),
 });
 
@@ -27,13 +31,14 @@ export async function addProduct(prevState: unknown, formData: FormData) {
 
   const data = result.data;
 
-  await fs.mkdir('products', { recursive: true });
-  await fs.mkdir('public/products', { recursive: true });
-  const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
-  await fs.writeFile(
-    `public${imagePath}`,
-    Buffer.from(await data.image.arrayBuffer())
-  );
+  await s3.putObject({
+    Bucket: 'badenbikeshop',
+    Key: data.image.name,
+    Body: Buffer.from(await data.image.arrayBuffer()),
+    ContentType: data.image.type,
+  });
+
+  const imagePath = `https://badenbikeshop.s3.eu-north-1.amazonaws.com/${data.image.name}`;
 
   await db.product.create({
     data: {
