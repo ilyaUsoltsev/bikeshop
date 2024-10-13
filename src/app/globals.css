@@ -2,26 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 150 100% 95%; /* Light green background */
+    --foreground: 150 50% 10%; /* Dark green for text */
+    --card: 150 100% 98%;
+    --card-foreground: 150 50% 12%;
+    --popover: 150 100% 95%;
+    --popover-foreground: 150 50% 10%;
+    --primary: 150 100% 40%; /* Main light green */
+    --primary-foreground: 150 50% 95%; /* Light text on green */
+    --secondary: 200 80% 90%; /* Light blue secondary */
+    --secondary-foreground: 200 50% 20%; /* Darker blue for text */
+    --muted: 200 80% 90%;
+    --muted-foreground: 200 50% 40%;
+    --accent: 30 100% 60%; /* Vibrant orange accent */
+    --accent-foreground: 30 100% 10%; /* Dark orange text */
+    --destructive: 0 84% 50%; /* Bright red for danger */
+    --destructive-foreground: 0 0% 100%; /* White text */
+    --border: 150 100% 85%; /* Light green borders */
+    --input: 150 100% 85%; /* Input fields */
+    --ring: 150 50% 20%; /* Darker green for focus rings */
+    --chart-1: 150 70% 40%; /* Green for charts */
+    --chart-2: 40 80% 50%; /* Yellow */
+    --chart-3: 220 60% 55%; /* Sky blue */
+    --chart-4: 340 75% 65%; /* Pinkish red */
+    --chart-5: 280 75% 55%; /* Purple */
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 150 50% 10%; /* Dark green background */
+    --foreground: 150 100% 95%; /* Light green text */
+    --card: 150 50% 10%;
+    --card-foreground: 150 100% 95%;
+    --popover: 150 50% 10%;
+    --popover-foreground: 150 100% 95%;
+    --primary: 150 50% 40%; /* Darker green for contrast */
+    --primary-foreground: 150 100% 90%;
+    --secondary: 200 50% 30%; /* Darker blue */
+    --secondary-foreground: 200 80% 90%; /* Lighter blue text */
+    --muted: 200 50% 30%;
+    --muted-foreground: 200 80% 70%;
+    --accent: 30 60% 45%; /* Darker orange */
+    --accent-foreground: 30 100% 90%;
+    --destructive: 0 50% 30%; /* Dark red */
+    --destructive-foreground: 0 0% 100%;
+    --border: 150 50% 20%; /* Dark green borders */
+    --input: 150 50% 20%;
+    --ring: 150 100% 40%; /* Light green for focus rings */
+    --chart-1: 150 60% 30%;
+    --chart-2: 40 60% 40%;
+    --chart-3: 220 50% 40%;
+    --chart-4: 340 60% 50%;
+    --chart-5: 280 60% 45%;
+  }  
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
