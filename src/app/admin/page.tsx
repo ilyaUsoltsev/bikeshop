@@ -42,22 +42,22 @@ async function getUserData() {
   };
 }
 
-// async function getProductData() {
-//   const data = await prisma.product.count({
-//     where: {
-//       isAvailable: true,
-//     },
-//   });
-
-//   return {
-//     count: data,
-//   };
-// }
+async function getProductData() {
+  const [availableCount, notAvailableCount] = await Promise.all([
+    prisma.product.count({ where: { isAvailable: true } }),
+    prisma.product.count({ where: { isAvailable: false } }),
+  ]);
+  return {
+    availableCount,
+    notAvailableCount,
+  };
+}
 
 const AdminDashboard = async () => {
-  const [salesData, userData] = await Promise.all([
+  const [salesData, userData, productData] = await Promise.all([
     getSalesData(),
     getUserData(),
+    getProductData(),
   ]);
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 lg-grid-cols-3 gap-4'>
@@ -75,10 +75,12 @@ const AdminDashboard = async () => {
       />
       <DashboardCard
         title='Active Products'
-        subtitle={`${formatCurrencyCHF(
-          userData.averageValuePerUser
-        )} Average Value`}
-        body={`${userData.userCount} Customers in Total`}
+        subtitle={`${formatNumber(
+          productData.notAvailableCount
+        )} No available Products`}
+        body={`${formatNumber(
+          productData.availableCount
+        )} available products count.`}
       />
     </div>
   );

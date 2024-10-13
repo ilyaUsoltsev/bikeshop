@@ -1,5 +1,7 @@
 import { Nav, NavLink } from '@/components/ui/nav';
 
+export const dynamic = 'force-dynamic';
+
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
